@@ -33,8 +33,6 @@ public class soundGeneration extends beatRow {
     private Media mediaObj;
 
 
-    //volume
-
 
     private Slider volume;
     public HBox volumeContainer;
@@ -50,6 +48,9 @@ public class soundGeneration extends beatRow {
 
     public soundGeneration() {
 
+    }
+    public void setMediaObj(Media media){
+        this.mediaObj = media;
     }
 
     // returns filename

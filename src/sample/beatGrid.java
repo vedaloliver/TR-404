@@ -6,7 +6,6 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
@@ -39,6 +38,9 @@ public class beatGrid extends beatRow {
     // bpm label
     private Label bpmLabel;
 
+    // ticker elements
+    private Thread tickerThread;
+    private ObservableList<Node> tickStateList;
 
     // functions as a container object for the individual rows
     public beatGrid() {
@@ -63,6 +65,10 @@ public class beatGrid extends beatRow {
         this.buttonUP = new Button();
         this.buttonDown = new Button();
         this.bpmLabel = new Label(Integer.toString(getClap().getBpm().getBPM()));
+
+        // thread
+        this.tickerThread = new Thread();
+        this.tickStateList = ticker.getTickerRowLayout().getChildren();
     }
 
     /// getters////
@@ -174,32 +180,41 @@ public class beatGrid extends beatRow {
     // Tick executor
     public void startTaskTick() {
         Runnable task = () -> runTaskTick();
-        Thread backGroundThread = new Thread(task);
-        backGroundThread.setDaemon(true);
-        backGroundThread.start();
+        tickerThread = new Thread(task);
+        tickerThread.setDaemon(true);
+        tickerThread.start();
     }
 
     // Handles changing the tick state
     private void runTaskTick() {
         // the list of the tick nodes
-        ObservableList<Node> list = ticker.getTickerRowLayout().getChildren();
         while(true){
             // int =1 as the first node is the "label" region
-            for (int i=1;i<list.size();i++){
+            for (int i=1;i<tickStateList.size();i++){
             try {
                 int finalI = i;
                 // turns the tick "on"
-                Platform.runLater(() -> list.get(finalI).setStyle("-fx-text-fill: #00ff00 ;-fx-font-weight: bold;-fx-font-size: 15px;"));
+                if (i == 1 ||i == 5||i == 9||i == 13){
+                    Platform.runLater(() -> tickStateList.get(finalI).setStyle("-fx-text-fill: #FF0000 ;-fx-font-weight: bold;-fx-font-size: 15px;"));
+
+                }else {
+                    Platform.runLater(() -> tickStateList.get(finalI).setStyle("-fx-text-fill: #00ff00 ;-fx-font-weight: bold;-fx-font-size: 15px;"));
+                }
                 //
                 Thread.sleep((long) (1000 * (60.0 / (getClap().getBpmLong() * 4))));
-                Platform.runLater(() -> list.get(finalI).setStyle("-fx-text-fill: #EEEEEE ;-fx-font-weight: bold;-fx-font-size: 15px;"));
+                Platform.runLater(() -> tickStateList.get(finalI).setStyle("-fx-text-fill: #EEEEEE ;-fx-font-weight: bold;-fx-font-size: 15px;"));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-
         }
-
+    }
+    // ends the ticker
+    public void cancelTickTask(){
+        tickerThread.stop();
+        for (int  i = 0;i<tickStateList.size();i++){
+            tickStateList.get(i).setStyle("-fx-text-fill: #EEEEEE ;-fx-font-weight: bold;-fx-font-size: 15px;");
+        }
 
     }
 }

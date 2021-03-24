@@ -30,6 +30,7 @@ public class GUI {
     private VBox timeRow;
     private VBox volumeControlRow;
     private Button playButton;
+    private Boolean playButtonOnCheck;
     private Button stopButton;
     private Button resetButton;
     private BPM bpm;
@@ -53,9 +54,10 @@ public class GUI {
         this.seekerRow = new VBox();
         this.timeRow = new VBox();
         this.volumeControlRow = new VBox();
-        this.playButton = new Button();
         this.bpm = new BPM();
-
+        //playback buttons
+        this.playButton = new Button();
+        this.playButtonOnCheck = false;
         this.stopButton = new Button();
         this.resetButton = new Button();
 
@@ -106,18 +108,17 @@ public class GUI {
 
     public void playButtonSet(){
         playButton.setGraphic(seekButtonImageSet("play.png"));
-        playButton.setOnAction(e->{
-            grid.getClap().startTask();
-            grid.getKick().startTask();
-            grid.getHat().startTask();
-            grid.getSnare().startTask();
-            grid.getCowbell().startTask();
-            playButtonBooleanCheck();
-            time.start();
-
-            grid.startTaskTick();
-
-        });
+            playButton.setOnAction(e -> {
+                grid.getClap().startTask();
+                grid.getKick().startTask();
+                grid.getHat().startTask();
+                grid.getSnare().startTask();
+                grid.getCowbell().startTask();
+                playButtonBooleanCheck();
+                time.start();
+                playButton.setDisable(true);
+                grid.startTaskTick();
+            });
     }
     /// Stop button ///
     /// come back to it
@@ -126,7 +127,14 @@ public class GUI {
         stopButton.setGraphic(seekButtonImageSet("stop.png"));
 
         stopButton.setOnAction(e ->{
+            grid.getClap().cancelTask();
+            grid.getKick().cancelTask();
+            grid.getHat().cancelTask();
+            grid.getSnare().cancelTask();
+            grid.getCowbell().cancelTask();
             grid.stopTrigger();
+            playButton.setDisable(false);
+            grid.cancelTickTask();
         });
     }
     /// reset button ////
@@ -142,6 +150,8 @@ public class GUI {
             grid.getSnare().reset();
             grid.getCowbell().reset();
             time.reset();
+            grid.cancelTickTask();
+            grid.startTaskTick();
         });
     }
     // adds buttons to a Hbox for the seeker row
