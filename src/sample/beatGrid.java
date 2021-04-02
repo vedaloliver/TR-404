@@ -1,74 +1,55 @@
 package sample;
 
-import javafx.animation.AnimationTimer;
-import javafx.application.Platform;
-import javafx.collections.ObservableList;
-import javafx.scene.Node;
+
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
+
 public class beatGrid extends beatRow {
+    // separate classes for each instrument
     private beatRow Kick;
     private beatRow Snare;
     private beatRow Hat;
     private beatRow Cowbell;
     private beatRow Clap;
-
+    // beatTicker for showing beat position, similar to beatrow class with some differences
     private beatTicker ticker;
 
 
-    // VBOX beatGrid
+    // Master grid for applying above classes to
     private VBox grid;
-
-    // Button which starts Looping
-    private Button playButton;
-
-    // Stop button
-    private Button stopButton;
+    // state boolean for playback buttons
     public static boolean playState;
 
-    // Time element
-    private Time time;
 
-    // bpm button linking to all
+    // Buttons responsible for changing bpm
     private Button buttonUP;
     private Button buttonDown;
-    // bpm label
+
+    // BPM display label
     private Label bpmLabel;
 
-    // ticker elements
-    private Thread tickerThread;
-    private ObservableList<Node> tickStateList;
 
-    // functions as a container object for the individual rows
+
     public beatGrid() {
         this.Kick = new beatRow("Kick");
         this.Hat = new beatRow("Hat");
         this.Snare = new beatRow("Snare");
         this.Cowbell = new beatRow("Cowbell");
         this.Clap = new beatRow("Clap");
-
         this.ticker = new beatTicker();
-
         this.grid = new VBox();
-        this.playButton = new Button();
-        this.stopButton = new Button();
         this.playState = true;
-
-        // time
-
-        this.time = new Time();
-
-        // bpm
         this.buttonUP = new Button();
         this.buttonDown = new Button();
         this.bpmLabel = new Label(Integer.toString(getClap().getBpm().getBPM()));
 
-        // thread
-        this.tickerThread = new Thread();
-        this.tickStateList = ticker.getTickerRowLayout().getChildren();
     }
 
     /// getters////
@@ -91,15 +72,17 @@ public class beatGrid extends beatRow {
     public beatRow getClap() {
         return this.Clap;
     }
+    public beatTicker getTicker(){
+        return this.ticker;
+    }
 
-    // creates row entities from beatrow classes
+    // creates row entities from beatrow and ticker classes
     public void init() {
         Kick.initaliser();
         Hat.initaliser();
         Snare.initaliser();
         Cowbell.initaliser();
         Clap.initaliser();
-
         ticker.initaliserTicker();
     }
 
@@ -116,37 +99,78 @@ public class beatGrid extends beatRow {
 
     // creates a check to see if the state is flagged as false(triggered off by off switch
     // if swtiched false(off) pressing play button allows it to start again
-
-
     public void setPlayState() {
         playState = true;
     }
 
-    // Turns off the while looping mechanic in beatrow and stops the loop
-    // nice as it lets the loop ride until the end
+    // Stops loop by breaking while looping mechanic in beatrow
     public void stopTrigger() {
         playState = false;
     }
-
 
     // executes above commands and creates a grid
     public VBox execute() {
         init();
         addToVBox();
-//        tickChange();
         return this.grid;
     }
+    public void setBPMButtonStyle(Button button,String colour){
+        button.setStyle(
+                "-fx-background-color:" +
+                        "#090a0c, " +
+                        colour +
+                        "radial-gradient(center 50% 0%, radius 100%, rgba(114,131,148,0.9), rgba(255,255,255,0));"+
+                        "-fx-background-radius: 5,4,3,5;"+
+                        "-fx-background-insets: 0,1,1,0;"+
+                        "-fx-text-fill: white;"+
+                        "-fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );"+
+                        "-fx-font-family: Arial;"+
+                        "-fx-text-fill: linear-gradient(white, #d0d0d0);"+
+                        "-fx-font-size: 3px;"+
+                        "-fx-padding: 10 20 10 20;");
 
 
-    // Since i can only change the bpm of each track at a time i have to set the button on this class
+
+
+        button.setMinWidth(35);
+        button.setMaxWidth(35);
+        button.setMinHeight(22);
+        button.setMaxHeight(22);
+    }
+    public void setButtonLightUpClick(Button button){
+        final String[] string = {""};
+
+        javafx.event.EventHandler handler = new EventHandler() {
+
+            @Override
+            public void handle(Event event) {
+                setBPMButtonStyle(button,"linear-gradient(#FFFFE0 0%, #e6e600 5%, #191d22 100%), ");
+            }
+        };
+
+        javafx.event.EventHandler handlerTwo = new EventHandler() {
+
+            @Override
+            public void handle(Event event) {
+                setBPMButtonStyle(button,"linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%), ");
+            }
+        };
+        button.addEventHandler(MouseEvent.MOUSE_PRESSED,handler);
+        button.addEventHandler(MouseEvent.MOUSE_RELEASED,handlerTwo);
+
+    }
+
     // assigns the Button to increase each track by one in unison
     public Button buttonUp() {
+        setBPMButtonStyle(buttonUP,"linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%), ");
+        setButtonLightUpClick(buttonUP);
         buttonUP.setOnAction(e -> {
             getClap().getBpm().bpmPlus();
             getKick().getBpm().bpmPlus();
             getSnare().getBpm().bpmPlus();
             getCowbell().getBpm().bpmPlus();
             getHat().getBpm().bpmPlus();
+            getTicker().getBPM().bpmPlus();
             this.bpmLabel.setText(Integer.toString(getClap().getBpm().getBPM()));
         });
         return this.buttonUP;
@@ -154,12 +178,17 @@ public class beatGrid extends beatRow {
 
     // assigns the Button to decrease each track by one in unison
     public Button buttonDown() {
+        setBPMButtonStyle(buttonDown,"linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%), ");
+        setButtonLightUpClick(buttonDown);
+
         buttonDown.setOnAction(e -> {
             getClap().getBpm().bpmMinus();
             getKick().getBpm().bpmMinus();
             getSnare().getBpm().bpmMinus();
             getCowbell().getBpm().bpmMinus();
             getHat().getBpm().bpmMinus();
+            getTicker().getBPM().bpmMinus();
+
             // while just setting for one instrument it is reflective of tracks also
             this.bpmLabel.setText(Integer.toString(getClap().getBpm().getBPM()));
         });
@@ -168,54 +197,15 @@ public class beatGrid extends beatRow {
 
     // returns the label
     public Label getBPMLabel() {
-        this.bpmLabel.setStyle("-fx-text-fill: #393e46; -fx-border-color:#00adb5; -fx-background-color: #EEEEEE;");
-        Font font = Font.loadFont("file:resources/fonts/JX-8P_Font.ttf", 45);
+        this.bpmLabel.setAlignment(Pos.CENTER);
+
+        this.bpmLabel.setStyle("-fx-text-fill: #FF0000; -fx-background-color: #000000;");
+        Font font = Font.loadFont("file:resources/fonts/digital7.ttf", 55);
         this.bpmLabel.setFont(font);
-        this.bpmLabel.setMinWidth(130);
+        this.bpmLabel.setMinWidth(100);
         return this.bpmLabel;
 
     }
 
-
-    // Tick executor
-    public void startTaskTick() {
-        Runnable task = () -> runTaskTick();
-        tickerThread = new Thread(task);
-        tickerThread.setDaemon(true);
-        tickerThread.start();
-    }
-
-    // Handles changing the tick state
-    private void runTaskTick() {
-        // the list of the tick nodes
-        while(true){
-            // int =1 as the first node is the "label" region
-            for (int i=1;i<tickStateList.size();i++){
-            try {
-                int finalI = i;
-                // turns the tick "on"
-                if (i == 1 ||i == 5||i == 9||i == 13){
-                    Platform.runLater(() -> tickStateList.get(finalI).setStyle("-fx-text-fill: #FF0000 ;-fx-font-weight: bold;-fx-font-size: 15px;"));
-
-                }else {
-                    Platform.runLater(() -> tickStateList.get(finalI).setStyle("-fx-text-fill: #00ff00 ;-fx-font-weight: bold;-fx-font-size: 15px;"));
-                }
-                //
-                Thread.sleep((long) (1000 * (60.0 / (getClap().getBpmLong() * 4))));
-                Platform.runLater(() -> tickStateList.get(finalI).setStyle("-fx-text-fill: #EEEEEE ;-fx-font-weight: bold;-fx-font-size: 15px;"));
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        }
-    }
-    // ends the ticker
-    public void cancelTickTask(){
-        tickerThread.stop();
-        for (int  i = 0;i<tickStateList.size();i++){
-            tickStateList.get(i).setStyle("-fx-text-fill: #EEEEEE ;-fx-font-weight: bold;-fx-font-size: 15px;");
-        }
-
-    }
 }
 

@@ -31,9 +31,7 @@ public class soundGeneration extends beatRow {
     private String fileName;
     // media conversion
     private Media mediaObj;
-
-
-
+    // volume button (not working yet)
     private Slider volume;
     public HBox volumeContainer;
 
@@ -49,15 +47,6 @@ public class soundGeneration extends beatRow {
     public soundGeneration() {
 
     }
-    public void setMediaObj(Media media){
-        this.mediaObj = media;
-    }
-
-    // returns filename
-    public String getName() {
-        return this.fileName;
-    }
-
     // plays sound
     public MediaPlayer play() {
         MediaPlayer hit = new MediaPlayer(this.mediaObj);

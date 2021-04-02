@@ -1,6 +1,7 @@
 package sample;
 
-import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -12,16 +13,29 @@ import java.util.ArrayList;
 
 public class beatTicker {
 
-
-    private ArrayList<Button> tickList;
+    // layout
     private HBox tickerRowLayout;
+    private BPM bpm;
+
+    // Ticker elements
+    /// Separate thread
+    private Thread tickerThread;
+    // provides the state of the tick
+    private ObservableList<Node> tickStateList;
 
     public beatTicker(){
-        this.tickList = new ArrayList<Button>();
         this.tickerRowLayout= new HBox();
+        this.bpm = new BPM();
+
+        this.tickerThread = new Thread();
+        this.tickStateList = tickerRowLayout.getChildren();
     }
 
-    // display for the instrument
+    public BPM getBPM(){
+        return this.bpm;
+    }
+
+    // Each node is a Label, with the 'ticker' being a letter
     public void label(int width) {
         Label label = new Label();
         label.setMinWidth(width);
@@ -41,20 +55,17 @@ public class beatTicker {
         tickerRowLayout.setStyle(style);
     }
 
-    // Creates a number identifier for each beat
+    // Loops creation to 16 beats
     public void beatMarkCreationLoop(int width, int height) {
         int beatNo = 1;
         for (int i = 0; i < 16; i++) {
-            //Button button = new Button();
             Label label = new Label();
             setSize(label, width, height);
-//            label.setText("    " + Integer.toString(i));
             label.setText("  ■");
 
             label.setStyle("-fx-text-fill: #EEEEEE;-fx-font-weight: bold;-fx-font-size: 15px;");
             this.tickerRowLayout.getChildren().add(label);
 
-            //indentCreator();
         }
     }
     // finalises the row by creating it based on physical attributes
@@ -65,7 +76,6 @@ public class beatTicker {
         label(95);
         // iterates and creates the squares
         beatMarkCreationLoop(35, 50);
-
         return tickerRowLayout;
     }
 
@@ -76,11 +86,52 @@ public class beatTicker {
         rowCreation();
     }
 
-    /// this works when you just have one
-    /// so probably it would be good to have this on an animation timer or a loop???
-    public void tickOn(int index){
-        tickerRowLayout.getChildren().get(index).setStyle("-fx-text-fill: #00ff00 ;-fx-font-weight: bold;-fx-font-size: 15px;");
+
+    // Thread Creation and execution
+    //  executor
+    public void startTaskTick() {
+        Runnable task = () -> runTaskTick();
+        tickerThread = new Thread(task);
+        tickerThread.setDaemon(true);
+        tickerThread.start();
+    }
+
+    // Handles changing the tick state
+    private void runTaskTick() {
+        // the list of the tick nodes
+        while(true){
+            // int =1 as the first node is the "label" region
+            for (int i=1;i<tickStateList.size();i++){
+                try {
+                    int finalI = i;
+                    // turns the tick "on"
+                    if (i == 1 ||i == 5||i == 9||i == 13){
+                        Platform.runLater(() -> tickStateList.get(finalI).setStyle("-fx-text-fill: #FF0000 ;-fx-font-weight: bold;-fx-font-size: 15px;"));
+
+                    }else {
+                        Platform.runLater(() -> tickStateList.get(finalI).setStyle("-fx-text-fill: #00ff00 ;-fx-font-weight: bold;-fx-font-size: 15px;"));
+                    }
+                    //
+                    Thread.sleep((long) (1000 * (60.0 / (this.bpm.getBPM() * 4))));
+                    Platform.runLater(() -> tickStateList.get(finalI).setStyle("-fx-text-fill: #EEEEEE ;-fx-font-weight: bold;-fx-font-size: 15px;"));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+    // ends the ticker
+    public void cancelTickTask(){
+        tickerThread.stop();
+        for (int  i = 0;i<tickStateList.size();i++){
+            tickStateList.get(i).setStyle("-fx-text-fill: #EEEEEE ;-fx-font-weight: bold;-fx-font-size: 15px;");
+        }
+
     }
 
 
-}
+
+    }
+
+
+

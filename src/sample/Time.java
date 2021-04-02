@@ -2,6 +2,7 @@ package sample;
 import javafx.animation.AnimationTimer;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
@@ -17,34 +18,28 @@ public class Time {
     private boolean timeStartState;
     // if is above 1 then it doesnt start it again
     private int timeStartStateCount;
-    // for pausing the clock
-    private boolean timePauseState;
-
-
-    private long consoleTimeDenominator;
+    // provides time as a fraction to show the beat currently on
     public Integer fractionTime;
     private long fractionstartTime;
-
+    private boolean timePauseState;
 
     public Time() {
         this.startTime = System.currentTimeMillis();
         this.time = 0;
         this.timeStartState = false;
         this.timeStartStateCount = 0;
-        this.timePauseState = false;
-
-        /// fractions
-        this.consoleTimeDenominator = 0;
         this.fractionTime = 0;
         this.fractionstartTime = 0L;
-
+        this.timePauseState = false;
     }
 
     // formatting for time symbols
     public void labelFormat(Label label) {
-        label.setStyle("-fx-text-fill: #393e46; -fx-border-color:#00adb5; -fx-background-color: #EEEEEE;");
-        Font font = Font.loadFont("file:resources/fonts/JX-8P_Font.ttf",45);
-        label.setMinWidth(150);
+        label.setAlignment(Pos.CENTER);
+
+        label.setStyle("-fx-text-fill: #FF0000; -fx-background-color: #000000;");
+        Font font = Font.loadFont("file:resources/fonts/digital7.ttf",55);
+        label.setMinWidth(130);
         label.setFont(font);
     }
 

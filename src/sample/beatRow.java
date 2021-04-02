@@ -1,7 +1,6 @@
 package sample;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -10,17 +9,12 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.media.Media;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.util.Duration;
-
-import java.io.File;
 import java.util.*;
 
 
@@ -29,49 +23,45 @@ import java.util.*;
 public class beatRow {
     // list of buttons
     private ArrayList<Node> list;
-    //indent count
-    private int count;
-    // iniivudal button row
+    // individual button row
     private HBox hButtonLayout;
+    // used to detect if beat is selected on/turned on
     public boolean beatState;
-    private HashMap<Integer, Button> map;
+    // list of 16 beat states
     private ArrayList<Boolean> beatStateList;
+    // map creation for giving each button a hash key
+    private HashMap<Integer, Button> map;
+    // Name of the instrument for label assignment
     public String instrumentName;
+    // gets and playbacks sound
     private soundGeneration sound;
+    // bpm alteration
     private BPM bpm;
     // drop down box for instrument changing
     private ComboBox dropDown;
+    // used to acsess the file
     private String filename;
-
-    // Thread stopper
+    // Thread
     private Thread thread;
-
+    // used for seeing the current step of the beat
     public int stepIndex;
 
     public beatRow(String name) {
         this.instrumentName = name;
         this.hButtonLayout = new HBox();
-        // indent count
-        this.count = 0;
         this.list = new ArrayList<>();
         this.map = new HashMap<>();
         this.beatState = false;
         this.beatStateList = new ArrayList<Boolean>(Arrays.asList(new Boolean[16]));
         Collections.fill(beatStateList, Boolean.FALSE);
         this.filename = "C:\\Users\\ojwar\\Desktop\\Code_files\\tickerTestTwo\\sounds"+"\\"+instrumentName+"\\"+instrumentName+" 1";
-
         this.sound = new soundGeneration(this.filename+".wav");
-
         this.bpm = new BPM();
-
         this.dropDown = new ComboBox();
-
         this.thread = new Thread();
-
-
         this.stepIndex = 0;
     }
-
+    /// GETTERS ////
     public beatRow() {
     }
     public soundGeneration getSound(){
@@ -80,12 +70,19 @@ public class beatRow {
     public BPM getBpm(){
         return this.bpm;
     }
-    public long getBpmLong(){
-        long bpmLong = (long) this.bpm.getBPM();
-        return bpmLong;
+    public ArrayList<Node> getList() {
+        return this.list;
+    }
+    public HBox gethButtonLayout() {
+        return this.hButtonLayout;
     }
 
-    // display for the instrument
+    public int getStepIndex(){
+        return this.stepIndex;
+    }
+
+
+    //// LABEL REGION /////
     public Label label(int width) {
         // label creation and name
         Label label = new Label(instrumentName);
@@ -95,10 +92,10 @@ public class beatRow {
         Font font = Font.loadFont("file:resources/fonts/JX-8P_Font.ttf",13);
         label.setFont(font);
         label.setTextFill(Color.web("#eeeeee"));
-
         return label;
 
     }
+    // Drop down box for choosing the sound/filename of the instrument
     public ComboBox instrumentSelectionBox(String name){
         /// combobox which is for assigning the instrument sound
         ArrayList<String> instruments = new ArrayList<>();
@@ -129,12 +126,12 @@ public class beatRow {
         hButtonLayout.setStyle(style);
     }
 
-
-    public void setStyleOn(Button button){
+    // changes the styling of the button to 'light up' when the corresponding button is pressed
+    public void setStyleButton(Button button,String colour){
         button.setStyle(
                 "-fx-background-color:" +
                         "#090a0c, " +
-                        "linear-gradient(#FFFFE0 0%, #e6e600 5%, #191d22 100%), " +
+                        colour +
                         "radial-gradient(center 50% -5%, radius 100%, rgba(114,131,148,0.9), rgba(255,255,255,0));"+
                         "-fx-background-radius: 5,4,3,5;"+
                         "-fx-background-insets: 0,1,1,0;"+
@@ -144,29 +141,41 @@ public class beatRow {
                         "-fx-text-fill: linear-gradient(white, #d0d0d0);"+
                         "-fx-font-size: 12px;"+
                         "-fx-padding: 10 20 10 20;");
+
+
+        String stringoff = "linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%), ";
+        String stringOn = "linear-gradient(#FFFFE0 0%, #e6e600 5%, #191d22 100%), ";
     }
-    public void setStyleOff(Button button){
-        button.setStyle(
-                "-fx-background-color:" +
-                        "#090a0c, " +
-                        "linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%), " +
-                        "radial-gradient(center 50% 0%, radius 100%, rgba(114,131,148,0.9), rgba(255,255,255,0));"+
-                        "-fx-background-radius: 5,4,3,5;"+
-                        "-fx-background-insets: 0,1,1,0;"+
-                        "-fx-text-fill: white;"+
-                        "-fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );"+
-                        "-fx-font-family: Arial;"+
-                        "-fx-text-fill: linear-gradient(white, #d0d0d0);"+
-                        "-fx-font-size: 3px;"+
-                        "-fx-padding: 10 20 10 20;");
+
+    public void setButtonLightUpClick(Button button){
+        final String[] string = {""};
+
+        javafx.event.EventHandler handler = new EventHandler() {
+
+            @Override
+            public void handle(Event event) {
+                setStyleButton(button,"linear-gradient(#FFFFE0 0%, #e6e600 5%, #191d22 100%), ");
+            }
+        };
+
+        javafx.event.EventHandler handlerTwo = new EventHandler() {
+
+            @Override
+            public void handle(Event event) {
+                setStyleButton(button,"linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%), ");
+            }
+        };
+        button.addEventHandler(MouseEvent.MOUSE_PRESSED,handler);
+        button.addEventHandler(MouseEvent.MOUSE_RELEASED,handlerTwo);
 
     }
-    // duplicates squares
+
+    // duplication of Buttons to 4 bars/16 beats
     public void squareCreationLoop() {
         // a row of 16 pads
         for (int i = 0; i < 16; i++) {
             Button button = new Button();
-            setStyleOff(button);
+            setStyleButton(button,"linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%), ");
             button.setMinHeight(50);
             button.setMinWidth(35);
             button.setMaxHeight(50);
@@ -176,12 +185,10 @@ public class beatRow {
         }
     }
 
-    public ArrayList<Node> getList() {
-        return this.list;
-    }
+
     /////////////// TO MAP //////////////////////////
 
-    // assigns an integer for reference
+    // assigns an integer for referencing in beat state detection and adds it to a map
     public HashMap<Integer, Button> toMap(ArrayList<Node> list) {
         int index = 0;
 
@@ -194,11 +201,6 @@ public class beatRow {
         return map;
     }
 
-    public ArrayList<Boolean> getBeatStateList() {
-        return this.beatStateList;
-    }
-
-
     /////////////// EVENT HANDLING //////////////////////////
 
     // If clicked, it assigns a boolean value to list of booleans corresponding to it's index
@@ -210,9 +212,12 @@ public class beatRow {
 
             @Override
             public void handle(Event event) {
+                // the button text is a sloppy way of giving it a boolean value - not possible to give a boolean to a button
                 if (button.getText().equals(t)) {
                     button.setText(f);
-                    setStyleOff(button);
+                    // turns off the button lighting up
+                    setStyleButton(button,"linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%), ");
+                    // sets the beat state to off
                     for (Map.Entry<Integer, Button> i : map.entrySet()) {
                         if (i.getValue().equals(button)) {
                             beatStateList.set(i.getKey(), false);
@@ -220,7 +225,9 @@ public class beatRow {
                     }
                 } else {
                     button.setText(t);
-                    setStyleOn(button);
+                    // turns on the button
+                    setStyleButton(button, "linear-gradient(#FFFFE0 0%, #e6e600 5%, #191d22 100%), ");
+                    // turns on the beat state for that button
                     for (Map.Entry<Integer, Button> i : map.entrySet()) {
                         if (i.getValue().equals(button)) {
                             beatStateList.set(i.getKey(), true);
@@ -239,42 +246,18 @@ public class beatRow {
             i.addEventHandler(MouseEvent.MOUSE_CLICKED, sound.soundMaker(filename));
             // the button state turns on and subsequently affects the list of booleans
             i.addEventHandler(MouseEvent.MOUSE_CLICKED, beatButtonOn(i));
+            setButtonLightUpClick(i);
+
 
             // adds to the row layout
             layout.getChildren().add(i);
         }
     }
 
-
-    // finalises the row by creating it based on physical attributes
-    public HBox rowCreation(String labelName, String filename) {
-        // spacing and colour background
-        design(10, "-fx-background-color: #222831");
-        // Label name and width (fone size/colour should be integrated)
-        labelRegion(labelName,  95);
-        // iterates and creates the squares
-        squareCreationLoop();
-        // adds it to the map
-        add(toMap(getList()), hButtonLayout, filename);
-        return hButtonLayout;
-    }
-
-    public HBox gethButtonLayout() {
-        return this.hButtonLayout;
-    }
-
-    //  wraps up the classes processes for use in other domains
-    public HBox initaliser() {
-
-        rowCreation(instrumentName, filename + ".wav");
-        changeInstrument();
-
-        return this.hButtonLayout;
-    }
-
-
-
-    // so this does work somehow but it isnt actually changing the soudns
+    // Instrument changing event handling
+    // at this time it doesnt work
+    /// it desyncs the instrument
+    /// and also only works once which is weird
     public HBox changeInstrument(){
         EventHandler<ActionEvent> event=
                 new EventHandler<ActionEvent>() {
@@ -311,6 +294,7 @@ public class beatRow {
         for (Map.Entry<Integer, Button> i : map.entrySet()) {
             if (beatStateList.get(i.getKey()) == true){
                 i.getValue().setText("On");
+                setStyleButton(i.getValue(),"linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%), ");
             }
         }
         soundGeneration newSound = new soundGeneration(filename+".wav");
@@ -318,11 +302,35 @@ public class beatRow {
         startTask();
 
     }
-    //////// Thread Creation and playback functionality/////
-    /// gets the step of the row seeking which can provide the fraction of 16 label
-    public int getStepIndex(){
-        return this.stepIndex;
+
+    ///// FINALISATION ///////
+
+    // finalises the row by creating it based on physical attributes
+    public HBox rowCreation(String labelName, String filename) {
+        // spacing and colour background
+        design(10, "-fx-background-color: #222831");
+        // Label name and width (fone size/colour should be integrated)
+        labelRegion(labelName,  95);
+        // iterates and creates the squares
+        squareCreationLoop();
+        // adds it to the map
+        add(toMap(getList()), hButtonLayout, filename);
+        return hButtonLayout;
     }
+
+    //  wraps up the classes processes for use in other domains
+    public HBox initaliser() {
+        rowCreation(instrumentName, filename + ".wav");
+        changeInstrument();
+        return this.hButtonLayout;
+    }
+
+
+
+    //////// THREADING /////
+
+    /// gets the step of the row seeking which can provide the fraction of 16 label
+
     public void reset(){
         this.stepIndex = 0;
     }
@@ -338,7 +346,7 @@ public class beatRow {
     public void cancelTask(){
         thread.stop();
     }
-    // task details
+    // task mechanics
     private void runTask() {
             // if that index in the boolean list indicates the button state is on
             while (beatGrid.playState == true) {
