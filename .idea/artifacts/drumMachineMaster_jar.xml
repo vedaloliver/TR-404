@@ -1,0 +1,16 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="drumMachineMaster:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/drumMachineMaster_jar</output-path>
+    <root id="archive" name="drumMachineMaster.jar">
+      <element id="module-output" name="drumMachineMaster" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../openjfx-15.0.1_windows-x64_bin-sdk/javafx-sdk-15.0.1/lib/javafx-swt.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../openjfx-15.0.1_windows-x64_bin-sdk/javafx-sdk-15.0.1/lib/javafx.web.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../openjfx-15.0.1_windows-x64_bin-sdk/javafx-sdk-15.0.1/lib/javafx.base.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../openjfx-15.0.1_windows-x64_bin-sdk/javafx-sdk-15.0.1/lib/javafx.fxml.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../openjfx-15.0.1_windows-x64_bin-sdk/javafx-sdk-15.0.1/lib/javafx.media.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../openjfx-15.0.1_windows-x64_bin-sdk/javafx-sdk-15.0.1/lib/javafx.swing.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../openjfx-15.0.1_windows-x64_bin-sdk/javafx-sdk-15.0.1/lib/javafx.controls.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../openjfx-15.0.1_windows-x64_bin-sdk/javafx-sdk-15.0.1/lib/javafx.graphics.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

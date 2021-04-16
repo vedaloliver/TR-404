@@ -174,9 +174,12 @@ public class GUI {
         stopButtonSet();
         resetButtonSet();
         // add to hbox
+        buttonRow.getChildren().add(new Label("                           "));
+
         buttonRow.getChildren().add(playButton);
         buttonRow.getChildren().add(stopButton);
-        buttonRow.getChildren().add(resetButton);
+        // temporarily removed until functionality is corrected
+        //buttonRow.getChildren().add(resetButton);
 
         return  buttonRow;
     }
@@ -190,7 +193,7 @@ public class GUI {
         timeRow.setStyle(backgroundColour);
         // adding elements of time
         // spacer to align
-        timeRow.getChildren().add(new Label("            "));
+        timeRow.getChildren().add(new Label("                                                         "));
         // clock
         timeRow.getChildren().add(time.timeToLabel());
         // 16 bar step
@@ -244,7 +247,7 @@ public class GUI {
         alignment.setCenter(timeRow);
 
         // right alignment (Volume)
-        alignment.setRight(volumeControl());
+        //alignment.setRight(volumeControl());
 
         //Space
         alignment.setBottom(new Label("                  "));

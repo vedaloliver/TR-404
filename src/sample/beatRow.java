@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -54,7 +55,7 @@ public class beatRow {
         this.beatState = false;
         this.beatStateList = new ArrayList<Boolean>(Arrays.asList(new Boolean[16]));
         Collections.fill(beatStateList, Boolean.FALSE);
-        this.filename = "C:\\Users\\ojwar\\Desktop\\Code_files\\tickerTestTwo\\sounds"+"\\"+instrumentName+"\\"+instrumentName+" 1";
+        this.filename = "C:\\Users\\ojwar\\Desktop\\Code_files\\Drum machine\\tickerTestTwo\\sounds"+"\\"+instrumentName+"\\"+instrumentName+" 1";
         this.sound = new soundGeneration(this.filename+".wav");
         this.bpm = new BPM();
         this.dropDown = new ComboBox();
@@ -89,9 +90,10 @@ public class beatRow {
         // label width to create indentation
         label.setMinWidth(width);
         // Font and colour setting
-        Font font = Font.loadFont("file:resources/fonts/JX-8P_Font.ttf",13);
+        Font font = Font.loadFont("file:resources/fonts/din.ttf",22);
         label.setFont(font);
-        label.setTextFill(Color.web("#eeeeee"));
+        label.setTextFill(Color.web("#b6c7de"));
+        label.setAlignment(Pos.CENTER);
         return label;
 
     }
@@ -115,8 +117,11 @@ public class beatRow {
     public void labelRegion(String name, int width){
         VBox vbox = new VBox();
 
+
+        vbox.getChildren().add(new Label(" "));
+
         vbox.getChildren().add(label(width));
-        vbox.getChildren().add(instrumentSelectionBox(name));
+        //vbox.getChildren().add(instrumentSelectionBox(name));
         hButtonLayout.getChildren().add(vbox);
     }
 
@@ -310,7 +315,7 @@ public class beatRow {
         // spacing and colour background
         design(10, "-fx-background-color: #222831");
         // Label name and width (fone size/colour should be integrated)
-        labelRegion(labelName,  95);
+        labelRegion(labelName,  90);
         // iterates and creates the squares
         squareCreationLoop();
         // adds it to the map

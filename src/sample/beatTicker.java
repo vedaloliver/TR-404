@@ -3,13 +3,11 @@ package sample;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import java.util.ArrayList;
 
 public class beatTicker {
 
@@ -61,9 +59,9 @@ public class beatTicker {
         for (int i = 0; i < 16; i++) {
             Label label = new Label();
             setSize(label, width, height);
-            label.setText("  ■");
+            label.setText(" •");
 
-            label.setStyle("-fx-text-fill: #EEEEEE;-fx-font-weight: bold;-fx-font-size: 15px;");
+            label.setStyle("-fx-text-fill: #b6c7de;-fx-font-weight: bold;-fx-font-size: 40px;");
             this.tickerRowLayout.getChildren().add(label);
 
         }
@@ -73,7 +71,7 @@ public class beatTicker {
         // spacing and colour background
         design(10, "-fx-background-color: #222831");
         // Label name and width (fone size/colour should be integrated)
-        label(95);
+        label(88);
         // iterates and creates the squares
         beatMarkCreationLoop(35, 50);
         return tickerRowLayout;
@@ -106,14 +104,14 @@ public class beatTicker {
                     int finalI = i;
                     // turns the tick "on"
                     if (i == 1 ||i == 5||i == 9||i == 13){
-                        Platform.runLater(() -> tickStateList.get(finalI).setStyle("-fx-text-fill: #FF0000 ;-fx-font-weight: bold;-fx-font-size: 15px;"));
+                        Platform.runLater(() -> tickStateList.get(finalI).setStyle("-fx-text-fill: #ff3333 ;-fx-font-weight: bold;-fx-font-size: 40px;"));
 
                     }else {
-                        Platform.runLater(() -> tickStateList.get(finalI).setStyle("-fx-text-fill: #00ff00 ;-fx-font-weight: bold;-fx-font-size: 15px;"));
+                        Platform.runLater(() -> tickStateList.get(finalI).setStyle("-fx-text-fill: #f6ff4f ;-fx-font-weight: bold;-fx-font-size: 40px;"));
                     }
                     //
                     Thread.sleep((long) (1000 * (60.0 / (this.bpm.getBPM() * 4))));
-                    Platform.runLater(() -> tickStateList.get(finalI).setStyle("-fx-text-fill: #EEEEEE ;-fx-font-weight: bold;-fx-font-size: 15px;"));
+                    Platform.runLater(() -> tickStateList.get(finalI).setStyle("-fx-text-fill: #b6c7de ;-fx-font-weight: bold;-fx-font-size: 40px;"));
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -124,7 +122,7 @@ public class beatTicker {
     public void cancelTickTask(){
         tickerThread.stop();
         for (int  i = 0;i<tickStateList.size();i++){
-            tickStateList.get(i).setStyle("-fx-text-fill: #EEEEEE ;-fx-font-weight: bold;-fx-font-size: 15px;");
+            tickStateList.get(i).setStyle("-fx-text-fill: #b6c7de ;-fx-font-weight: bold;-fx-font-size: 40px;");
         }
 
     }
