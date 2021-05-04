@@ -30,6 +30,7 @@ This is an ongoing product. While i have integrated the base logic, I feel that 
 - Pattern recording and saving mechanics
 - possible integration on web application
 - Complete UI/UX 
+- css editing - encapsulate css elements into own file. add animations to the buttons for hover actions, click actions, ticker beats, label border edges smootheness
 
 ____________________________________________________________________________________________________________________________________________
 Bug List:
