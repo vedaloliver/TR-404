@@ -1,7 +1,7 @@
 
 # TR-404 Drum sequencer
 
-I have had an interest in electronic music, DJing, and it's production methods for a number of years. 
+I have had an interest in electronic music, DJing, and dance music production for a number of years. 
 Pieces of hardware equipment such as the Roland Tr-808 Or Korg Volca Beats have been widely used to synthesise drum sequences to be used for a wide range of musical genres.
 
 An example of such hardware is included: https://www.youtube.com/watch?v=sxZyjpd2KoM
