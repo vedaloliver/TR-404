@@ -18,4 +18,4 @@ Features:
 - time keeping mechanics present in the form of time elapsed and beat position
 - beats per minute (BPM) counter, able to change playback speed in real time 
 
-<img width="436" alt="122929636-5f74a580-d395-11eb-8a74-9b0f6857113a" src="https://user-images.githubusercontent.com/43319532/122930362-212bb600-d396-11eb-83ee-96dff9f7b116.png">
+<img width="523" alt="122929636-5f74a580-d395-11eb-8a74-9b0f6857113a" src="https://user-images.githubusercontent.com/43319532/122930490-3c96c100-d396-11eb-9f22-42f4adb341a4.png">
