@@ -14,26 +14,8 @@ Features:
 
 - Currently Includes 5 Multi-track, 16 beat/4 bar instrument rows
 - Timing is synced up to provide repeating playback, allowing the user to change beat patterns in real time 
-- playback functionality, such as play,stop and reset logic
-- time keeping mechanics in the form of time elapsed and beat position
+- playback functionality: play and stop logic
+- time keeping mechanics present in the form of time elapsed and beat position
 - beats per minute (BPM) counter, able to change playback speed in real time 
-- Instrument changing mechanics, allowing user to change timbre to fit the users needs 
 
-____________________________________________________________________________________________________________________________________________
-To add:
-This is an ongoing product. While i have integrated the base logic, I feel that there is a greater amount of features to add to make it attractive in a portfolio:
-
-- Volume control, both master and individual tracks
-- FM synthesiser
-- Effects panel for individual instruments (Delay, Reverb etc)
-- Pattern save states 
-- Pattern recording and saving mechanics
-- possible integration on web application
-- Complete UI/UX 
-- css editing - encapsulate css elements into own file. add animations to the buttons for hover actions, click actions, ticker beats, label border edges smootheness
-
-____________________________________________________________________________________________________________________________________________
-Bug List:
-- Instruemnt changing mechanic puts that track out of sync with the others due to thread halt
-- volume slider non functional
-- 
+![image](https://user-images.githubusercontent.com/43319532/122929636-5f74a580-d395-11eb-8a74-9b0f6857113a.png)
